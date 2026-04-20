@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IoT Soil Moisture Monitor
 
-## Getting Started
+A full-stack soil moisture monitoring project that pairs an ESP32 sensor node with a Next.js dashboard. The device posts moisture readings to a simple API, and the web UI displays the current value and a history chart with a modern, responsive design.
 
-First, run the development server:
+## Features
+
+- Real-time soil moisture meter
+- Historical chart (last 24 readings kept in memory)
+- REST API endpoint for ingesting and fetching sensor data
+- Responsive dashboard UI built with the Next.js App Router
+- Mock data initialized on first load for easy local testing
+
+## Architecture
+
+1. **ESP32** reads the analog moisture sensor.
+2. The device **POSTs** readings to the Next.js API (`/api/data`).
+3. The API stores readings in memory and exposes them via **GET**.
+4. The dashboard polls the API every 30 seconds to update the UI.
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19 + TypeScript
+- Tailwind CSS
+- Recharts (for the chart component)
+
+## Getting Started (Web App)
+
+### Prerequisites
+
+- Node.js 18+ and npm
+
+### Install & Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **GET** `/api/data`
+  - Returns current moisture, history, and last update time.
+- **POST** `/api/data`
+  - Body: `{ "moisture": number }` (0–100)
 
-## Learn More
+The API keeps data in memory only; a restart resets history.
 
-To learn more about Next.js, take a look at the following resources:
+## ESP32 Firmware
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The Arduino sketch lives in `ESP_Code.ino` and:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Connects to Wi‑Fi
+- Reads the sensor from analog pin A0
+- Sends JSON to the server URL
 
-## Deploy on Vercel
+Update the following before uploading:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `ssid` / `password`
+- `serverUrl` (point to your Next.js host and `/api/data`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+
+```
+app/                Next.js App Router pages + API
+components/         Dashboard UI components
+ESP_Code.ino        ESP32 firmware sketch
+```
+
+## Notes
+
+- The Weather widget is present but currently commented out in the dashboard.
+- For production, replace in-memory storage with a database or IoT platform.
