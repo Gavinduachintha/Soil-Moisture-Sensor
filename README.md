@@ -52,7 +52,7 @@ The API keeps data in memory only; a restart resets history.
 
 The Arduino sketch lives in `ESP_Code.ino` and:
 
-- Connects to Wi‑Fi
+- Connects to Wi-Fi
 - Reads the sensor from analog pin A0
 - Sends JSON to the server URL
 
