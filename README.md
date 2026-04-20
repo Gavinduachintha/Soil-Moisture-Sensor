@@ -45,9 +45,9 @@ flowchart LR
 |---|---|---|
 | VCC | 3V3 | Use 3.3V where possible |
 | GND | GND | Common ground required |
-| AO (analog out) | A0 (analog input) | `ESP_Code.ino` reads `analogRead(A0)` |
+| AO (analog out) | A0 (analog input) | Sketch currently uses `analogRead(A0)` |
 
-> The exact GPIO label for `A0` depends on your ESP32 board variant. On many boards, this maps to an ADC pin such as GPIO36 (VP).
+> `A0` is a board/core alias in this sketch. If your board does not expose `A0`, replace it in `ESP_Code.ino` with your board's ADC-capable GPIO (commonly GPIO36/VP on many ESP32 boards).
 
 ## Software Prerequisites
 
@@ -77,7 +77,6 @@ cd Soil-Moisture-Sensor
 
 ```bash
 npm install
-npm install recharts
 npm run dev
 ```
 
